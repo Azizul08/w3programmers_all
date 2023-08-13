@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +21,9 @@ Route::get('/', function () {
 Route::view('/welcome', 'welcome');
 Route::redirect('/here', '/there');
 
-Route::get('/user/{name?}', function ($name = 'Masud Alam') {
-    return $name;
-});
+// Route::get('/user/{name?}', function ($name = 'Masud Alam') {
+//     return $name;
+// });
 Route::get('/user2/{name2}', function ($name2) {
     return "Name: ".$name2;
 })->where('name2', '[A-Za-z]+');  //accept only alphabetical value
@@ -30,7 +32,6 @@ Route::get('/profile/test', function () {
     return view('test');
 })->name('profile');
 
-use App\Http\Controllers\UserController;
 Route::prefix('user')
     ->name('user.')
     ->controller(UserController::class)
@@ -40,3 +41,9 @@ Route::prefix('user')
         Route::get('/update/{id}','update')->name('update');
         Route::get('/delete/{id}','delete')->name('delete');
     });
+
+    Route::get('/users/{user:email}', function (User $user) {
+        return $user->name."<br>".$user->email;
+    });
+
+    Route::get('/users/{user}', [UserController::class, 'show']);
