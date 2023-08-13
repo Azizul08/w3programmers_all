@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,8 +42,30 @@ Route::prefix('user')
         Route::get('/delete/{id}','delete')->name('delete');
     });
 
+use App\Models\User;
     Route::get('/users/{user:email}', function (User $user) {
         return $user->name."<br>".$user->email;
     });
 
     Route::get('/users/{user}', [UserController::class, 'show']);
+
+use App\Enums\Category;
+Route::get('/categories/{category}', function (Category $category) {
+    return $category->value;
+});
+
+use App\Http\Middleware\check;
+
+Route::middleware([check::class])->group(function(){
+
+    Route::get('/showage/{age?}', [UserController::class, 'showAge']);
+
+});
+
+use Illuminate\Http\Request;
+Route::get('/token', function (Request $request) {
+    $token = $request->session()->token();
+
+    $token = csrf_token();
+    dd($token);
+});
