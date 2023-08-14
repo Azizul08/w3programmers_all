@@ -69,3 +69,7 @@ Route::get('/token', function (Request $request) {
     $token = csrf_token();
     dd($token);
 });
+
+use App\Http\Controllers\PostController; 
+
+Route::resource('posts',PostController::class);
