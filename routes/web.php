@@ -73,3 +73,19 @@ Route::get('/token', function (Request $request) {
 use App\Http\Controllers\PostController; 
 
 Route::resource('posts',PostController::class);
+
+use App\Http\Controllers\ProductController;
+ 
+Route::get('/', [ProductController::class, 'index']);  
+Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
+Route::get('/add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('add.to.cart');
+Route::patch('/update-cart', [ProductController::class, 'update'])->name('update.cart');
+Route::delete('/remove-from-cart', [ProductController::class, 'remove'])->name('remove.from.cart');
+
+Route::get('/products', [ProductController::class,'index2'])->name('products.index2'); 
+Route::get('products/create-step-one', [ProductController::class,'createStepOne'])->name('products.create.step.one');
+Route::post('products/create-step-one', [ProductController::class,'postCreateStepOne'])->name('products.create.step.one.post'); 
+Route::get('products/create-step-two', [ProductController::class,'createStepTwo'])->name('products.create.step.two'); 
+Route::post('products/create-step-two', [ProductController::class,'postCreateStepTwo'])->name('products.create.step.two.post');
+Route::get('products/create-step-three', [ProductController::class,'createStepThree'])->name('products.create.step.three');
+Route::post('products/create-step-three', [ProductController::class,'postCreateStepThree'])->name('products.create.step.three.post');
