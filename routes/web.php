@@ -70,22 +70,68 @@ Route::get('/token', function (Request $request) {
     dd($token);
 });
 
-use App\Http\Controllers\PostController; 
+use App\Http\Controllers\PostController;
 
 Route::resource('posts',PostController::class);
 
 use App\Http\Controllers\ProductController;
- 
-Route::get('/', [ProductController::class, 'index']);  
+
+Route::get('/', [ProductController::class, 'index']);
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
 Route::get('/add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('add.to.cart');
 Route::patch('/update-cart', [ProductController::class, 'update'])->name('update.cart');
 Route::delete('/remove-from-cart', [ProductController::class, 'remove'])->name('remove.from.cart');
 
-Route::get('/products', [ProductController::class,'index2'])->name('products.index2'); 
+Route::get('/products', [ProductController::class,'index2'])->name('products.index2');
 Route::get('products/create-step-one', [ProductController::class,'createStepOne'])->name('products.create.step.one');
-Route::post('products/create-step-one', [ProductController::class,'postCreateStepOne'])->name('products.create.step.one.post'); 
-Route::get('products/create-step-two', [ProductController::class,'createStepTwo'])->name('products.create.step.two'); 
+Route::post('products/create-step-one', [ProductController::class,'postCreateStepOne'])->name('products.create.step.one.post');
+Route::get('products/create-step-two', [ProductController::class,'createStepTwo'])->name('products.create.step.two');
 Route::post('products/create-step-two', [ProductController::class,'postCreateStepTwo'])->name('products.create.step.two.post');
 Route::get('products/create-step-three', [ProductController::class,'createStepThree'])->name('products.create.step.three');
 Route::post('products/create-step-three', [ProductController::class,'postCreateStepThree'])->name('products.create.step.three.post');
+
+use Illuminate\Support\Facades\DB;
+
+Route::get('/insert', function () {
+    $data = [
+        'name' => 'John Doe 2',
+        'email' => 'john2@example.com',
+        'password' => bcrypt('secret'),];
+
+    if(DB::table('users')->insertOrIgnore($data)){
+        dd(DB::table('users')->get());
+    }
+});
+
+
+Route::get('/getdata', function () {
+    $insert= DB::table('users2')->insertUsing(
+        ['id', 'name', 'email', 'email_verified_at','password'],
+        DB::table('users')
+            ->select('id', 'name', 'email', 'email_verified_at','password')
+            ->where('updated_at', '<=', now()->subMonth()));
+
+    if($insert){
+        dd(DB::table('users2')->get());
+    }
+});
+
+
+Route::get('/query', function () {
+    $employees = DB::table('employees')
+        ->where('status', '=', 'Awarded')
+        ->orWhere('age', '>=', 25)
+        ->get();
+    echo "<pre>";
+    print_r($employees);
+    echo "</pre>";
+
+});
+Route::get('/query2', function () {
+    $users = DB::table('users')
+        ->whereNull('updated_at')
+        ->get();
+    echo "<pre>";
+    print_r($users);
+    echo "</pre>";
+});
