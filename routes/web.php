@@ -135,3 +135,22 @@ Route::get('/query2', function () {
     print_r($users);
     echo "</pre>";
 });
+//laravel-chat-application-with-pusher-channel
+use App\Events\PusherBroadcast;
+
+Route::get('/pusher', function () {
+    return view('pusher');
+});
+Route::post('/send-message',function (Request $request){
+    event(new PusherBroadcast($request->username, $request->message));
+    return ['success' => true];
+});
+
+//create-laravel-notifications-using-database-channel
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('/deposit', [App\Http\Controllers\DepositController::class,'deposit'])->name('deposit');
+Route::get('/mark-as-read', [App\Http\Controllers\DepositController::class,'markAsRead'])->name('mark-as-read');
+
